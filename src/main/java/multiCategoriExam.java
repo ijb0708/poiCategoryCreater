@@ -18,24 +18,32 @@ public class multiCategoriExam {
         
         CategoryGenerator cg = new CategoryGenerator(wb);
         
+        // 카테고리 생성
         cg.createCategory("품목", new String[]{"과일", "채소"});
         cg.createCategory("과일", new String[]{"사과", "바나나", "망고"});
         cg.createCategory("채소", new String[]{"당근", "파프리카", "오이"});
         
+        // 시트생성
         Sheet sheet = wb.createSheet("목록들");
-//
+        
+        // 제약조건 주기 =INDIRECT 함수에서 이름관리자에 있는 내용을 기반으로 가져옴
         DataValidationHelper dvHelper = sheet.getDataValidationHelper();
         DataValidationConstraint constraint1 = dvHelper.createFormulaListConstraint("=INDIRECT(\"품목\")");
         DataValidationConstraint constraint2 = dvHelper.createFormulaListConstraint("=INDIRECT(B2)");
 
 //        CellRangeAddressList addressList = new CellRangeAddressList(0, 0, 0, 0);
 
+        // 해당 조건을 어느영역만큼 할것인지에 대한 내용
+        // 1열 1 - 100
         DataValidation valid1 = dvHelper.createValidation(constraint1, new CellRangeAddressList(1, 100, 1, 1));
+        // 2열 1 - 100
         DataValidation valid2 = dvHelper.createValidation(constraint2, new CellRangeAddressList(1, 100, 2, 2));
 
+        // 제약조건 최종적으로 추가
         sheet.addValidationData(valid1);
         sheet.addValidationData(valid2);
         
+        // 파일 생성현재경로에 결과 파일생성
         writeFile(wb, "test");
         
     }
